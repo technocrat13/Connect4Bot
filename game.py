@@ -21,8 +21,7 @@ def print_gameboard():
 
 def check_connect_list(list_to_check):
     '''checks if sent list has a 4 of the same coins'''
-    
-    
+
     if len(list_to_check) != 4 or 0 in list_to_check:
         return False
 
@@ -31,6 +30,41 @@ def check_connect_list(list_to_check):
     if sum(list_to_check) in [20, 28]:
         return True
     return False
+
+def check_diagonals(x_pos, y_pos):
+    '''checks for 4 connect4 on x, y'''
+
+    for j in range(0, 4):
+        list_diagonal_top = []
+        list_diagonal_bottom = []
+        for i in range(1 + j, 5 + j):
+            if y_pos - 4 + i >= 0 and x_pos - 4 + i >= 0:
+                try:
+                    list_diagonal_top.append(
+                        gameboard[y_pos - 4 + i][x_pos - 4 + i])
+                    #list_diagonal_bottom.append(gameboard[y_pos + 4 - i][x_pos - 4 + i])
+                except IndexError:
+                    index_error_count = index_error_count + 1
+
+            if y_pos + 4 - i >= 0 and x_pos - 4 + i >= 0:
+                try:
+                    #list_diagonal_top.append(gameboard[y_pos - 4 + i][x_pos - 4 + i])
+                    list_diagonal_bottom.append(
+                        gameboard[y_pos + 4 - i][x_pos - 4 + i])
+                except IndexError:
+                    index_error_count = index_error_count + 1
+
+        #print('checking diagonal top down ', end=' ')
+
+        if check_connect_list(list_diagonal_top) is True:
+            return '4connected'
+
+        #print('checking diagonal bottom up ', end=' ')
+        if check_connect_list(list_diagonal_bottom) is True:
+            return '4connected'
+
+    return False
+
 
 
 def check_connect_4(x_pos, y_pos):
@@ -58,34 +92,8 @@ def check_connect_4(x_pos, y_pos):
         #print('col not tall enough')
 
     # checking diagonals
-    for j in range(0, 4):
-        list_diagonal_top = []
-        list_diagonal_bottom = []
-        for i in range(1 + j, 5 + j):
-            if y_pos - 4 + i >= 0 and x_pos - 4 + i >= 0:
-                try:
-                    list_diagonal_top.append(gameboard[y_pos - 4 + i][x_pos - 4 + i])
-                    #list_diagonal_bottom.append(gameboard[y_pos + 4 - i][x_pos - 4 + i])
-                except IndexError:
-                    index_error_count = index_error_count + 1
 
-            if y_pos + 4 - i >= 0 and x_pos - 4 + i >= 0:
-                try:
-                    #list_diagonal_top.append(gameboard[y_pos - 4 + i][x_pos - 4 + i])
-                    list_diagonal_bottom.append(gameboard[y_pos + 4 - i][x_pos - 4 + i])
-                except IndexError:
-                    index_error_count = index_error_count + 1
-
-        #print('checking diagonal top down ', end=' ')
-
-        if check_connect_list(list_diagonal_top) is True:
-            return '4connected'
-
-        #print('checking diagonal bottom up ', end=' ')
-        if check_connect_list(list_diagonal_bottom) is True:
-            return '4connected'
-
-
+    return check_diagonals(x_pos, y_pos)
     # check bottom up diagonals
 
     #for j in range(0, 4):
@@ -99,8 +107,6 @@ def check_connect_4(x_pos, y_pos):
     #    if check_connect_list(list_diagonal) is True:
     #        return '4connected'
 
-
-    return False
 
 
 def probable_move(x_pos, y_pos):
