@@ -1,91 +1,107 @@
+'''this program plays connect 4 against you'''
+
 import random
 
 
 y, x = 6, 7
 gameboard = [[0 for j in range(x)] for i in range(y)]
 
-global moves
-global coin
-global top
-global toppedOut
-global notToppedOut
 
-moves = []
-toppedOut = []
-notToppedOut = [0, 1, 2, 3, 4, 5, 6]
+MOVES = []
+TOPPED_OUT = []
+NOT_TOPPED_OUT = [0, 1, 2, 3, 4, 5, 6]
 
 
-def printGameboard():
+def print_gameboard():
+    '''prints gameboard'''
+
     for i in gameboard:
         print(i)
 
 
-def checkConnectList(l):
+def check_connect_list(list_to_check):
+    '''checks if sent list has a 4 of the same coins'''
+
     #assert len(l) == 4, return continue
-    if sum(l) in [20, 28]:
+    if sum(list_to_check) in [20, 28]:
         return True
-    
+    return False
 
-# check if the product is equal to 4 times coin in that move from that xPos
-def checkConnect4(xPos, yPos):
+# check if the product is equal to 4 times COIN in that move from that x_pos
+def check_connect_4(x_pos, y_pos):
+    '''checks if there is a 4 sequence from the recived x and y coord'''
 
-    indexErrorCount = 0
+    index_error_count = 0
     # checking x axis
     for i in range(1, 5):
         try:
-            if checkConnectList(gameboard[yPos][xPos - 4 + i: xPos + i]) == True:
+            if check_connect_list(gameboard[y_pos][x_pos - 4 + i: x_pos + i]) is True:
                 return '4connected'
         except IndexError:
-            indexErrorCount = indexErrorCount + 1
+            index_error_count = index_error_count + 1
 
-    # checking bellow xPos
+    # checking bellow x_pos
     try:
-        if checkConnectList([gameboard[i][xPos] for i in range(yPos - 0, yPos + 4)]) == True:
+        if check_connect_list([gameboard[i][x_pos] for i in range(y_pos - 0, y_pos + 4)]) is True:
             return '4connected'
-    except:
-        indexErrorCount = indexErrorCount + 1
+    except IndexError:
+        index_error_count = index_error_count + 1
         #print('col not tall enough')
 
-    # checking top down diagonals
+    # checking TOP down diagonals
     for j in range(0, 4):
-        listDiagonal = []
+        list_diagonal_top = []
+        list_diagonal_bottom = []
         for i in range(1 + j, 5 + j):
             try:
-                listDiagonal.append(gameboard[yPos - 4 + i][xPos - 4 + i])
-            except:
-                indexErrorCount = indexErrorCount + 1
+                list_diagonal_top.append(gameboard[y_pos - 4 + i][x_pos - 4 + i])
+                list_diagonal_bottom.append(gameboard[y_pos + 4 - i][x_pos - 4 + i])
+            except IndexError:
+                index_error_count = index_error_count + 1
 
-        if checkConnectList(listDiagonal) == True:
+        if check_connect_list(list_diagonal_top) is True:
             return '4connected'
+
+        if check_connect_list(list_diagonal_bottom) is True:
+            return '4connected'
+
 
     # check bottom up diagonals
-    for j in range(0, 4):
-        listDiagonal = []
-        for i in range(1 + j, 5 + j):
-            try:
-                listDiagonal.append(gameboard[yPos + 4 - i][xPos - 4 + i])
-            except IndexError:
-                indexErrorCount = indexErrorCount + 1
 
-        if checkConnectList(listDiagonal) == True:
-            return '4connected'
+    #for j in range(0, 4):
+    #    list_diagonal = []
+    #    for i in range(1 + j, 5 + j):
+    #        try:
+    #            list_diagonal.append(gameboard[y_pos + 4 - i][x_pos - 4 + i])
+    #        except IndexError:
+    #            index_error_count = index_error_count + 1
+
+    #    if check_connect_list(list_diagonal) is True:
+    #        return '4connected'
 
 
-def probableMove(xPos, yPos):
+    return False
+
+
+def probable_move(x_pos, y_pos):
+    '''checks if coin placed at this position connects4'''
+
     for i in [5, 7]:
-        gameboard[yPos][xPos] = i
-        if checkConnect4(xPos, yPos) == '4connected':
-            gameboard[yPos][xPos] = 0
+        gameboard[y_pos][x_pos] = i
+        if check_connect_4(x_pos, y_pos) == '4connected':
+            gameboard[y_pos][x_pos] = 0
             if i == 7:
-                print('aha saved a connect4 at ' + str(xPos + 1))
+                print('aha saved a connect4 at ' + str(x_pos + 1))
             else:
-                print('i win in this simple move at ' + str(xPos + 1))
+                print('i win in this simple move at ' + str(x_pos + 1))
             return '4connected'
-        gameboard[yPos][xPos] = 0
+        gameboard[y_pos][x_pos] = 0
+
+    return False
 
 
-def stopAll4s():
-    #checkconnect4(takes xPos and then yPos) so find the highest yPos and check for every xPos
+def stop_4_connecting():
+    '''check_connect_4(takes x_pos and then y_pos) to highest y_pos and check for every x_pos'''
 
     top = []
     for i in range(0, x):
@@ -95,76 +111,83 @@ def stopAll4s():
                 break
 
     for j, i in zip(top, range(0, x)):
-        if probableMove(i, j) == '4connected':
+        if probable_move(i, j) == '4connected':
             return i
-    
-    return random.choice(notToppedOut)
+
+    return random.choice(NOT_TOPPED_OUT)
 
 
-def validMove(xPos, yPos):
-    if xPos in toppedOut:
+def valid_move(x_pos, y_pos):
+    '''checks if position is a valid move or not'''
+
+    if x_pos in TOPPED_OUT:
         return False
 
-    if yPos == 0:
-        toppedOut.append(xPos)
-        notToppedOut.remove(xPos)
+    if y_pos == 0:
+        TOPPED_OUT.append(x_pos)
+        NOT_TOPPED_OUT.remove(x_pos)
 
     return True
-    
 
-def validMoveX(xPos):
+
+def valid_move_x(x_pos):
+    '''sanitizes input and checks if given position is valid or not'''
+
     try:
-        xPos = int(xPos) - 1
-    except:
+        x_pos = int(x_pos) - 1
+    except ValueError:
         return False
 
-    if xPos in notToppedOut:
+    if x_pos in NOT_TOPPED_OUT:
         return True
     return False
 
 
-def addCoin(xPos):
-    moves.append(str(xPos))
+def add_coin(x_pos):
+    '''adds a coin at given position'''
+
+    MOVES.append(str(x_pos))
     for j in range(y - 1, -1, -1):
-        if gameboard[j][xPos] == 0 and validMove(xPos, j) == True:
-            gameboard[j][xPos] = coin
-            yPos = j
+        if gameboard[j][x_pos] == 0 and valid_move(x_pos, j) is True:
+            gameboard[j][x_pos] = COIN
+            y_pos = j
             break
-    return checkConnect4(xPos, yPos)
+    return check_connect_4(x_pos, y_pos)
 
 
-def takeInput():
+def take_input():
+    '''takes input if users chance, otherwise generates ai_move'''
 
-    if coin == 7:
-        move = input('drop coin at: ').rstrip()
-        while validMoveX(move) == False:
+    if COIN == 7:
+        move = input('drop COIN at: ').rstrip()
+        while valid_move_x(move) is False:
             move = input('last input invalid, go again: ').rstrip()
         return int(move) - 1
+
+    print('AI is calculating its next move.....')
+    ai_move = stop_4_connecting()
+    #ai_move = random.randint(0, 6)
+    print('Playing at: ' + str(ai_move + 1))
+    return ai_move
+
+
+
+TURN = 0
+COIN = 7
+
+while add_coin(take_input()) != '4connected':
+    if TURN % 2 == 0:
+        COIN = 5
     else:
-        print('AI is calculating its next move.....')
-        aiMove = stopAll4s()
-        #aiMove = random.randint(0, 6)
-        print('Playing at: ' + str(aiMove + 1))
-        return aiMove
+        COIN = 7
 
+    print_gameboard()
+    TURN = TURN + 1
 
+print_gameboard()
+with open('pastGames.txt', 'a') as f:
+    f.write('\n')
+    f.write(''.join(MOVES))
+    f.close()
 
-turn = 0
-coin = 7
-
-while addCoin(takeInput()) != '4connected':
-    if turn % 2 == 0:
-        coin = 5
-    else:
-        coin = 7
-
-    printGameboard()
-    turn = turn + 1
-else:
-    printGameboard()
-    file = open('pastGames.txt', 'a')
-    file.write('\n')
-    file.write(''.join(moves))
-    file.close()
-
-print('wow ' + str(coin) + ' wins!!1!!!!1111!')
+print('wow ' + str(COIN) + ' wins!!1!!!!1111!')
