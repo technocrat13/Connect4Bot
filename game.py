@@ -108,8 +108,8 @@ def stopAll4s():
     
     #move = random.randint(0, 6)
     #if move in toppedOut()
-    print('can choose from: ', end='')
-    print(notToppedOut)
+    #print('can choose from: ', end='')
+    #print(notToppedOut)
     return random.choice(notToppedOut)
 
 
@@ -179,6 +179,7 @@ while addCoin(takeInput()) != '4connected':
 else:
     printGameboard()
     file = open('pastGames.txt', 'a')
+    file.write('\n')
     file.write(''.join(moves))
     file.close()
 
