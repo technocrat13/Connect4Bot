@@ -15,10 +15,10 @@ toppedOut = []
 notToppedOut = [0, 1, 2, 3, 4, 5, 6]
 
 
-
 def printGameboard():
     for i in gameboard:
         print(i)
+
 
 def checkConnectList(l):
     #assert len(l) == 4, return continue
@@ -26,16 +26,13 @@ def checkConnectList(l):
         return True
     
 
- # check if the product is equal to 4 times coin in that move from that xPos
+# check if the product is equal to 4 times coin in that move from that xPos
 def checkConnect4(xPos, yPos):
 
-    #listToCheck = []
     indexErrorCount = 0
-
     # checking x axis
     for i in range(1, 5):
         try:
-            #listToCheck.append(gameboard[yPos][xPos - 4 + i: xPos + i])
             if checkConnectList(gameboard[yPos][xPos - 4 + i: xPos + i]) == True:
                 return '4connected'
         except IndexError:
@@ -43,7 +40,6 @@ def checkConnect4(xPos, yPos):
 
     # checking bellow xPos
     try:
-        #listToCheck.append([gameboard[i][xPos] for i in range(yPos - 0, yPos + 4)])
         if checkConnectList([gameboard[i][xPos] for i in range(yPos - 0, yPos + 4)]) == True:
             return '4connected'
     except:
@@ -59,7 +55,6 @@ def checkConnect4(xPos, yPos):
             except:
                 indexErrorCount = indexErrorCount + 1
 
-        #listToCheck.append(listDiagonal)
         if checkConnectList(listDiagonal) == True:
             return '4connected'
 
@@ -72,9 +67,9 @@ def checkConnect4(xPos, yPos):
             except IndexError:
                 indexErrorCount = indexErrorCount + 1
 
-        #listToCheck.append(listDiagonal)
         if checkConnectList(listDiagonal) == True:
             return '4connected'
+
 
 def probableMove(xPos, yPos):
     for i in [5, 7]:
@@ -89,8 +84,6 @@ def probableMove(xPos, yPos):
         gameboard[yPos][xPos] = 0
 
 
-
-
 def stopAll4s():
     #checkconnect4(takes xPos and then yPos) so find the highest yPos and check for every xPos
 
@@ -102,44 +95,37 @@ def stopAll4s():
                 break
 
     for j, i in zip(top, range(0, x)):
-        #print('checking i , j: ' + str((i, j)))
         if probableMove(i, j) == '4connected':
             return i
     
-    #move = random.randint(0, 6)
-    #if move in toppedOut()
-    #print('can choose from: ', end='')
-    #print(notToppedOut)
     return random.choice(notToppedOut)
 
 
 def validMove(xPos, yPos):
     if xPos in toppedOut:
         return False
-    
 
     if yPos == 0:
         toppedOut.append(xPos)
         notToppedOut.remove(xPos)
 
     return True
-
     
 
-
-
-    
 def validMoveX(xPos):
-    if xPos in toppedOut:
+    try:
+        xPos = int(xPos) - 1
+    except:
         return False
-    return True
 
+    if xPos in notToppedOut:
+        return True
+    return False
 
 
 def addCoin(xPos):
     moves.append(str(xPos))
     for j in range(y - 1, -1, -1):
-        #print(j)
         if gameboard[j][xPos] == 0 and validMove(xPos, j) == True:
             gameboard[j][xPos] = coin
             yPos = j
@@ -147,15 +133,13 @@ def addCoin(xPos):
     return checkConnect4(xPos, yPos)
 
 
-
-
 def takeInput():
-    #moves = ''
+
     if coin == 7:
-        move = int(input('drop coin at: ').rstrip()) - 1
+        move = input('drop coin at: ').rstrip()
         while validMoveX(move) == False:
-            move = int(input('last input invalid, go agane: ').rstrip()) - 1
-        return move
+            move = input('last input invalid, go again: ').rstrip()
+        return int(move) - 1
     else:
         print('AI is calculating its next move.....')
         aiMove = stopAll4s()
@@ -165,9 +149,9 @@ def takeInput():
 
 
 
-
 turn = 0
 coin = 7
+
 while addCoin(takeInput()) != '4connected':
     if turn % 2 == 0:
         coin = 5
