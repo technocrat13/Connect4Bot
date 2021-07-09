@@ -34,6 +34,7 @@ def check_connect_list(list_to_check):
 def check_diagonals(x_pos, y_pos):
     '''checks for 4 connect4 on x, y'''
 
+    index_error_count = 0
     for j in range(0, 4):
         list_diagonal_top = []
         list_diagonal_bottom = []
@@ -92,8 +93,8 @@ def check_connect_4(x_pos, y_pos):
         #print('col not tall enough')
 
     # checking diagonals
-
     return check_diagonals(x_pos, y_pos)
+
     # check bottom up diagonals
 
     #for j in range(0, 4):
@@ -135,6 +136,7 @@ def stop_4_connecting():
             if gameboard[j][i] == 0:
                 top.append(j)
                 break
+
 
     for j, i in zip(top, range(0, x)):
         if probable_move(i, j) == '4connected':
@@ -209,6 +211,10 @@ while add_coin(take_input()) != '4connected':
 
     print_gameboard()
     TURN = TURN + 1
+
+    if TURN == 42:
+        print('omg a draw!!1!')
+        break
 
 print_gameboard()
 with open('pastGames.txt', 'a') as f:
