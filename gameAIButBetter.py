@@ -149,9 +149,33 @@ def keywithmaxval(d):
 
 
 # the percentage of time when we should take the best action (instead of a random action)
-epsilon = 1
+epsilon = 0.9
 discount_factor = 0.9  # discount factor for future rewards
 learning_rate = 0.9  # the rate at which the AI agent should learn
+
+
+def is_creating_4_above(x_pos):
+    if top[x_pos] == 0:
+        return False
+    y_pos = top[x_pos]
+
+    for i in [7, 5]:
+        gameboard[y_pos - 1][x_pos] = i
+        #print('probablemove')
+        #print_gameboard()
+        if check_connect_4(x_pos, y_pos - 1) == '4connected':
+            gameboard[y_pos - 1][x_pos] = 0
+            return True
+        gameboard[y_pos - 1][x_pos] = 0
+
+    
+    if check_connect_4(x_pos, top[x_pos] - 1) is '4connected':
+        print('checking above xpos')
+        return True
+
+    return False
+    
+
 
 def stop_4_connecting():
     '''check_connect_4(takes x_pos and then y_pos) to highest y_pos and check for every x_pos'''
@@ -176,7 +200,11 @@ def stop_4_connecting():
     #print('NOTTOPPEDOUT in stop4connecting: ', end='') 
     #print(NOT_TOPPED_OUT)
 
-    return random.choice(NOT_TOPPED_OUT)
+    move = random.choice(NOT_TOPPED_OUT)
+    while is_creating_4_above(move) is True:
+        move = random.choice(NOT_TOPPED_OUT)
+
+    return move 
 
 
 def valid_move(x_pos, y_pos):
@@ -269,10 +297,10 @@ def generate_next_move(board_state):
 def take_input():
     '''takes input if users chance, otherwise generates ai_move'''
 
-    if COIN == 8:
+    if COIN == 7:
         return random.choice(NOT_TOPPED_OUT)
 
-    if COIN == 7:
+    if COIN == 8:
         move = input('drop COIN at: ').rstrip()
         while valid_move_x(move) is False:
             move = input('last input invalid, go again: ').rstrip()
@@ -287,10 +315,10 @@ def take_input():
     return ai_move
 
 
-episodes = 1
+episodes = 10
 
 for i in range(episodes):
-    print('------------------new game----------------')
+    print('---------------------------------------new game----------------------------------------')
     gameboard = [[0 for j in range(x)] for i in range(y)]
     TURN = 0
     COIN = 7
@@ -302,7 +330,7 @@ for i in range(episodes):
         else:
             COIN = 7
 
-        print_gameboard()
+        #print_gameboard()
         TURN = TURN + 1
 
         if TURN == 42:
@@ -320,7 +348,8 @@ for i in range(episodes):
     TOPPED_OUT = []
     NOT_TOPPED_OUT = [0, 1, 2, 3, 4, 5, 6]
 
-    print('wow ' + str(COIN) + ' wins game ' + str(i))
+    print('wow ' + str(COIN) + ' wins game ' + str(i + 1) + '/' + str(episodes))
+    print(str(((i + 1) / episodes) * 100) + '%' + ' completion')
 
 
 with open("qtable.txt", "wb") as myFile:
