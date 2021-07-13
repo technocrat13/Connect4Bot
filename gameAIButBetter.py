@@ -354,7 +354,7 @@ def take_input(player):
     return ai_move
 
 
-episodes = 100
+episodes = 60000
 
 wins_7 = 0
 wins_5 = 0
