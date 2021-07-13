@@ -2,15 +2,15 @@
 
 import random
 import shelve
-import numpy as np
 import datetime
+import numpy as np
 
 
 
 y, x = 6, 7
 gameboard = [[0 for j in range(x)] for i in range(y)]
 
-
+COIN = 7
 MOVES = []
 TOPPED_OUT = []
 NOT_TOPPED_OUT = [0, 1, 2, 3, 4, 5, 6]
@@ -138,26 +138,26 @@ def probable_move(x_pos, y_pos):
 
     return False
 
-def keywithmaxval(d):
-    """ a) create a list of the dict's keys and values; 
+def keywithmaxval(dic):
+    """ a) create a list of the dict's keys and values;
         b) return the key with the max value
-         
-         
-    Based on https://stackoverflow.com/questions/268272/getting-key-with-maximum-value-in-dictionary"""
-    k = list(d.keys())
+    https://stackoverflow.com/questions/268272/getting-key-with-maximum-value-in-dictionary"""
+    k = list(dic.keys())
     # boltzmann
-    v = np.array(list(d.values()))
+    val = np.array(list(dic.values()))
     # If there are multiple max values, choose randomly
-    return k[int(random.choice(np.argwhere(v == np.amax(v))))]
+    return k[int(random.choice(np.argwhere(val == np.amax(val))))]
 
 
 # the percentage of time when we should take the best action (instead of a random action)
-epsilon = 0.9
-discount_factor = 0.9  # discount factor for future rewards
-learning_rate = 0.9  # the rate at which the AI agent should learn
+EPSILION = 0.9
+DISCOUNT_FACTOR = 0.9  # discount factor for future rewards
+LEARNING_RATE = 0.9  # the rate at which the AI agent should learn
 
 
 def is_creating_4_above(x_pos):
+    '''checks if there is a connect 4 above current pos'''
+
     if top[x_pos] == 0:
         return False
     y_pos = top[x_pos]
@@ -174,22 +174,23 @@ def is_creating_4_above(x_pos):
             return True
         gameboard[y_pos - 1][x_pos] = 0
 
-    
-    if check_connect_4(x_pos, top[x_pos] - 1) is '4connected':
+
+    if check_connect_4(x_pos, top[x_pos] - 1) == '4connected':
         print('checking above xpos')
         return True
 
     return False
-    
+
 
 def stop_4_connecting():
     '''check_connect_4(takes x_pos and then y_pos) to highest y_pos and check for every x_pos'''
-    
+
     #(0, top[0])
-    #print('top in stop4connecting: ', end='') 
+    #print('top in stop4connecting: ', end='')
     #print(top)
 
-    for i in range(len(top)):
+    length = len(top)
+    for i in range(length):
         if top[i] == -1:
             continue
         if probable_move(i, top[i]) == '4connected':
@@ -197,13 +198,13 @@ def stop_4_connecting():
                 return i
             #good_move.append(i)
             return i
-    
+
     move = random.choice(NOT_TOPPED_OUT)
     gameboard_as_key = ''.join(str(item) for innerlist in gameboard for item in innerlist)
-    if np.random.random() < epsilon:
+    if np.random.random() < EPSILION:
         move = keywithmaxval(q_table[gameboard_as_key])
 
-    #print('NOTTOPPEDOUT in stop4connecting: ', end='') 
+    #print('NOTTOPPEDOUT in stop4connecting: ', end='')
     #print(NOT_TOPPED_OUT)
     count = 0
     while is_creating_4_above(move) is True:
@@ -213,7 +214,7 @@ def stop_4_connecting():
         move = random.choice(NOT_TOPPED_OUT)
         count = count + 1
 
-    return move 
+    return move
 
 
 def valid_move(x_pos, y_pos):
@@ -266,15 +267,14 @@ def get_move_reward(x_pos):
         gameboard[y_pos][x_pos] = i
         #print('calculating reward')
         #print_gameboard()
-        
+
         if check_connect_4(x_pos, y_pos) == '4connected':
             gameboard[y_pos][x_pos] = 0
             if i == 7:
                 print('aha saved a connect4 at ' + str(x_pos + 1))
                 return -20
-            else:
-                print('i win in this simple move at ' + str(x_pos + 1))
-                return 100
+            print('i win in this simple move at ' + str(x_pos + 1))
+            return 100
             #return '4connected'
         gameboard[y_pos][x_pos] = 0
 
@@ -282,7 +282,7 @@ def get_move_reward(x_pos):
 
 
 def generate_next_move(board_state):
-    '''next move is generated either through random or highest q value, epsilon mediates this'''
+    '''next move is generated either through random or highest q value, EPSILION mediates this'''
 
     gameboard_as_key = ''.join(str(item)
                                 for innerlist in board_state for item in innerlist)
@@ -297,9 +297,11 @@ def generate_next_move(board_state):
     reward = get_move_reward(action)
 
     old_q_value = q_table[gameboard_as_key][action]
-    temporal_difference = reward + (discount_factor * q_table[gameboard_as_key][keywithmaxval(q_table[gameboard_as_key])]) - old_q_value
+    temporal_difference = reward + \
+        (DISCOUNT_FACTOR * q_table[gameboard_as_key]
+         [keywithmaxval(q_table[gameboard_as_key])]) - old_q_value
 
-    new_q_value = old_q_value + (learning_rate * temporal_difference)
+    new_q_value = old_q_value + (LEARNING_RATE * temporal_difference)
     q_table[gameboard_as_key][action] = new_q_value
 
     print(q_table[gameboard_as_key])
@@ -308,12 +310,13 @@ def generate_next_move(board_state):
 
 
 def swap_gameboard():
-    '''to change all the 5s to 7s and vice versa, used to calculatate board for AI2 but feed to the main db'''
+    '''to change all the 5s to 7s and vice versa, used to calculatate board
+    for AI2 but feed to the main db'''
 
     for i in range(x):
         for j in range(5, top[i], -1):
             if gameboard[j][i] == 7:
-                gameboard[j][i] = 5     
+                gameboard[j][i] = 5
             else:
                 gameboard[j][i] = 7
 
@@ -321,48 +324,51 @@ def swap_gameboard():
 def take_input(player):
     '''takes input if users chance, otherwise generates ai_move'''
 
-    
-    if player == 7:
-        COIN = 5
-        #print_gameboard()
-        swap_gameboard()
-        #print('AI2 is calculating its next move.....')
-        ai_2_move = generate_next_move(gameboard)
-        #print('Playing at: ' + str(ai_2_move + 1))
-        COIN = 7
-        swap_gameboard()
-        return ai_2_move
-    
+
+    if player == 6: #change to 7 for 
+        if COIN == 7:
+            COIN = 5
+            #print_gameboard()
+            swap_gameboard()
+            #print('AI2 is calculating its next move.....')
+            ai_2_move = generate_next_move(gameboard)
+            #print('Playing at: ' + str(ai_2_move + 1))
+            COIN = 7
+            swap_gameboard()
+            return ai_2_move
+
 
     if player == 9:
         return random.choice(NOT_TOPPED_OUT)
 
-    if player == 8:
+    if player == 7:
         move = input('drop COIN at: ').rstrip()
         while valid_move_x(move) is False:
             move = input('last input invalid, go again: ').rstrip()
         return int(move) - 1
 
-    
 
-    #print('AI is calculating its next move.....')
+    print('AI is calculating its next move.....')
     #ai_move = stop_4_connecting()
     ai_move = generate_next_move(gameboard)
 
     #ai_move = random.randint(0, 6)
-    #print('Playing at: ' + str(ai_move + 1))
+    print('Playing at: ' + str(ai_move + 1))
     return ai_move
 
 
-episodes = 60000
+EPISODES = 3
 
-wins_7 = 0
-wins_5 = 0
-draws = 0
-draw = False
+WINS_7 = 0
+WINS_5 = 0
+DRAWS = 0
+DRAW = False
 first_time = datetime.datetime.now()
 
-for e in range(episodes):
+print_gameboard()
+
+
+for e in range(EPISODES):
     print('---------------------------------------new game----------------------------------------')
     gameboard = [[0 for j in range(x)] for i in range(y)]
     TURN = 0
@@ -375,16 +381,16 @@ for e in range(episodes):
         else:
             COIN = 7
 
-        #print_gameboard()
+        print_gameboard()
         TURN = TURN + 1
 
         if TURN == 42:
             print('omg a draw!!1!')
-            draw = True
+            DRAW = True
             break
 
     print_gameboard()
-    
+
     #with open('pastGames.txt', 'a') as f:
     #    f.write('\n')
     #    f.write(''.join(MOVES))
@@ -394,21 +400,23 @@ for e in range(episodes):
     TOPPED_OUT = []
     NOT_TOPPED_OUT = [0, 1, 2, 3, 4, 5, 6]
 
-    if draw is False:
+    if DRAW is False:
         if COIN == 7:
-            wins_7 = wins_7 + 1
+            WINS_7 = WINS_7 + 1
         else:
-            wins_5 = wins_5 + 1
-        print('wow ' + str(COIN) + ' wins game ' + str(e + 1) + '/' + str(episodes))
+            WINS_5 = WINS_5 + 1
+        print('wow ' + str(COIN) + ' wins game ' + str(e + 1) + '/' + str(EPISODES))
     else:
-        draws = draws + 1
-        draw = False
+        DRAWS = DRAWS + 1
+        DRAW = False
 
-    print('5 wins: ' + str(wins_5) + ' | 7 wins: ' + str(wins_7) + ' | draws: ' + str(draws))
-    print('5 win%: ' + str(wins_5 * 100 / (e + 1)) + ' | 7 win%: ' + str(wins_7 * 100 / (e + 1)) + ' | draw%: ' + str(draws * 100 / (e + 1)))
-    print(str(((e + 1) / episodes) * 100) + '%' + ' completion')
+    print('5 wins: ' + str(WINS_5) + ' | 7 wins: ' +
+          str(WINS_7) + ' | draws: ' + str(DRAWS))
+    print('5 win%: ' + str(WINS_5 * 100 / (e + 1)) + ' | 7 win%: ' +
+          str(WINS_7 * 100 / (e + 1)) + ' | draw%: ' + str(DRAWS * 100 / (e + 1)))
+    print(str(((e + 1) / EPISODES) * 100) + '%' + ' completion')
 
-    if (e + 1) % (episodes/100) == 0:
+    if (e + 1) % (EPISODES/100) == 0:
         print('quicksaving')
         q_table.sync()
 
@@ -417,6 +425,4 @@ q_table.close()
 
 later_time = datetime.datetime.now()
 difference = later_time - first_time
-seconds_in_day = 24 * 60 * 60
-print(divmod(difference.days * seconds_in_day + difference.seconds, 60))
-
+print(divmod((difference.days * 24 * 60 * 60) + difference.seconds, 60))
