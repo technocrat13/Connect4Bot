@@ -1,3 +1,4 @@
+  
 name: Pylint
 
 on: [push]
@@ -19,5 +20,4 @@ jobs:
         pip install pylint
     - name: Analysing the code with pylint
       run: |
-        pylint gameAIButBetter.py
-        pylint train.py
+        pylint `ls -R|grep .py$|xargs`
