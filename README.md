@@ -18,7 +18,7 @@ pip install numpy
 python gameAIButBetter.py
 ```
 
-⋅⋅⋅The gameboard is  2D list and is represented in this form, positions to drop a `COIN` are from 1 to 7
+   The gameboard is  2D list and is represented in this form, positions to drop a `COIN` are from 1 to 7
 
 * To train the model:
 ```bash
