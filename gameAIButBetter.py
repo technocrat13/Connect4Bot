@@ -13,9 +13,10 @@ gameboard = [[0 for j in range(x)] for i in range(y)]
 COIN = 7
 MOVES = []
 TOPPED_OUT = []
-NOT_TOPPED_OUT = [0, 1, 2, 3, 4, 5, 6]
+NOT_TOPPED_OUT = [i for i in range(x)]
 
 #q_table = {}s
+print('loading shelve....')
 q_table = shelve.open('q_table_shelf.db',  writeback=True)
 
 #with open("qtable.txt", "rb") as myFile:
@@ -150,7 +151,7 @@ def keywithmaxval(dic):
 
 
 # the percentage of time when we should take the best action (instead of a random action)
-EPSILION = 0.9
+EPSILION = 1
 DISCOUNT_FACTOR = 0.9  # discount factor for future rewards
 LEARNING_RATE = 0.9  # the rate at which the AI agent should learn
 
@@ -188,6 +189,15 @@ def stop_4_connecting():
     #(0, top[0])
     #print('top in stop4connecting: ', end='')
     #print(top)
+
+    if TURN == 0:
+        random.choice([2, 3, 4])
+
+    if TURN == 1:
+        if top[3] == 4:
+            return random.choice([2, 4])
+        return 3
+
 
     length = len(top)
     for i in range(length):
@@ -272,9 +282,9 @@ def get_move_reward(x_pos):
             gameboard[y_pos][x_pos] = 0
             if i == 7:
                 print('aha saved a connect4 at ' + str(x_pos + 1))
-                return -20
+                return -500
             print('i win in this simple move at ' + str(x_pos + 1))
-            return 100
+            return 10000
             #return '4connected'
         gameboard[y_pos][x_pos] = 0
 
@@ -325,17 +335,16 @@ def take_input(player):
     '''takes input if users chance, otherwise generates ai_move'''
 
 
-    if player == 6: #change to 7 for 
-        if COIN == 7:
-            COIN = 5
-            #print_gameboard()
-            swap_gameboard()
-            #print('AI2 is calculating its next move.....')
-            ai_2_move = generate_next_move(gameboard)
-            #print('Playing at: ' + str(ai_2_move + 1))
-            COIN = 7
-            swap_gameboard()
-            return ai_2_move
+    if player == 9: #change to 7 for 
+        COIN = 5
+        #print_gameboard()
+        swap_gameboard()
+        #print('AI2 is calculating its next move.....')
+        ai_2_move = generate_next_move(gameboard)
+        #print('Playing at: ' + str(ai_2_move + 1))
+        COIN = 7
+        swap_gameboard()
+        return ai_2_move
 
 
     if player == 9:
@@ -365,15 +374,15 @@ DRAWS = 0
 DRAW = False
 first_time = datetime.datetime.now()
 
-print_gameboard()
-
+#print_gameboard()
+print('biginning best of ' + str(EPISODES))
 
 for e in range(EPISODES):
     print('---------------------------------------new game----------------------------------------')
     gameboard = [[0 for j in range(x)] for i in range(y)]
     TURN = 0
     COIN = 7
-    top = [5, 5, 5, 5, 5, 5, 5]
+    top = [5 for i in range(x)]
 
     while add_coin(take_input(COIN)) != '4connected':
         if TURN % 2 == 0:
@@ -385,7 +394,8 @@ for e in range(EPISODES):
         TURN = TURN + 1
 
         if TURN == 42:
-            print('omg a draw!!1!')
+            print('omg a draw!!1! at game: ' +
+                  str(e + 1) + '/' + str(EPISODES))
             DRAW = True
             break
 
@@ -398,7 +408,7 @@ for e in range(EPISODES):
 
     MOVES = []
     TOPPED_OUT = []
-    NOT_TOPPED_OUT = [0, 1, 2, 3, 4, 5, 6]
+    NOT_TOPPED_OUT = [i for i in range(x)]
 
     if DRAW is False:
         if COIN == 7:
@@ -416,9 +426,16 @@ for e in range(EPISODES):
           str(WINS_7 * 100 / (e + 1)) + ' | draw%: ' + str(DRAWS * 100 / (e + 1)))
     print(str(((e + 1) / EPISODES) * 100) + '%' + ' completion')
 
+
+
     if (e + 1) % (EPISODES/100) == 0:
         print('quicksaving')
         q_table.sync()
+        later_time = datetime.datetime.now()
+        difference = later_time - first_time
+        print(str(divmod((difference.days * 24 * 60 * 60) +
+                         difference.seconds, 60)[0] / 60) + ' Hours gone by')
+
 
 
 q_table.close()
