@@ -1,6 +1,7 @@
 
 # Connect4 AI
-![example workflow](https://github.com/technocrat13/Connect4Bot/actions/workflows/main.yml/badge.svg)
+![pylint](https://github.com/technocrat13/Connect4Bot/actions/workflows/main.yml/badge.svg)
+![pytest](https://github.com/technocrat13/Connect4Bot/actions/workflows/pytest.yml/badge.svg)
 
 
 Python bot to play connect4, uses Q-Learning based on the Greedy Epsilon Bellman Equation 
