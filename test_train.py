@@ -6,6 +6,8 @@ y, x = 6, 7
 
 
 def test_check_connect_4():
+    '''tests 4 points for connect 4s'''
+
     TOPPED_OUT = []
     NOT_TOPPED_OUT = [i for i in range(x)]
     train.gameboard = [ [0, 0, 0, 0, 0, 0, 0],
@@ -17,14 +19,16 @@ def test_check_connect_4():
                 ]
 
     assert train.check_connect_4(4, 3) == '4connected'
-    assert train.check_connect_4(2, 4) == False
+    assert train.check_connect_4(2, 4) is False
     assert train.check_connect_4(6, 5) == '4connected'
     assert train.check_connect_4(1, 2) == '4connected'
 
 
 def test_probable_move():
+    '''tests 3 points for stopping or making 4s'''
+
     TOPPED_OUT = []
-    NOT_TOPPED_OUT = [i for i in range(x)]
+    NOT_TOPPED_OUT = list(range(x))
     train.gameboard = [[0, 0, 0, 0, 0, 0, 0],
                        [0, 0, 0, 0, 0, 0, 0],
                        [0, 0, 0, 0, 0, 5, 0],
@@ -34,13 +38,16 @@ def test_probable_move():
                        ]
 
     assert train.probable_move(4, 3) == '4connected'
-    assert train.probable_move(0, 5) == False
+    assert train.probable_move(0, 5) is False
     assert train.probable_move(1, 2) == '4connected'
 
 
 def test_is_creating_4_above():
+    '''tests 2 points for dangerous wells (if coin placed here, opp wins) 4s'''
+
+
     TOPPED_OUT = []
-    NOT_TOPPED_OUT = [i for i in range(x)]
+    NOT_TOPPED_OUT = list(range(x))
     train.top = [5, 2, 4, 3, 4, 1, 4]
     train.gameboard = [[0, 0, 0, 0, 0, 0, 0],
                        [0, 0, 0, 0, 0, 0, 0],
@@ -50,11 +57,12 @@ def test_is_creating_4_above():
                        [0, 7, 5, 7, 7, 7, 7],
                        ]
 
-    assert train.is_creating_4_above(4) == True
-    assert train.is_creating_4_above(3) == False
+    assert train.is_creating_4_above(4) is True
+    assert train.is_creating_4_above(3) is False
 
 def test_add_coin():
-    
+    '''testing 1 point of adding a coin and 1 point for topping out'''
+
     train.top = [5, 2, 4, 3, 4, 1, 4]
     train.gameboard = [[0, 0, 0, 0, 0, 0, 0],
                        [0, 0, 0, 0, 0, 0, 0],
