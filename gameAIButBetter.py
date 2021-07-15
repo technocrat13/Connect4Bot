@@ -256,7 +256,7 @@ def valid_move_x(x_pos):
 def add_coin(x_pos):
     '''adds a coin at given position'''
 
-    MOVES.append(str(x_pos))
+    #MOVES.append(str(x_pos))
     for j in range(y - 1, -1, -1):
         if gameboard[j][x_pos] == 0 and valid_move(x_pos, j) is True:
             gameboard[j][x_pos] = COIN
@@ -267,6 +267,27 @@ def add_coin(x_pos):
             return check_connect_4(x_pos, y_pos)
 
     return 'not valid'
+
+
+def add_coin_key_maker(x_pos):
+    '''adds a coin at given position tempraraitoly'''
+
+    #MOVES.append(str(x_pos))
+
+    y_pos = top[x_pos]
+    gameboard[y_pos][x_pos] = COIN
+    key = ''.join(str(item) for innerlist in gameboard for item in innerlist)
+    gameboard[y_pos][x_pos] = 0
+    return key
+
+
+def remove_coin(x_pos):
+    '''removes coin at given position'''
+
+    y_pos = top[x_pos]
+    gameboard[y_pos + 1][x_pos] = 0
+
+    top[x_pos] = top[x_pos] + 1
 
 
 def get_move_reward(x_pos):
@@ -307,12 +328,23 @@ def generate_next_move(board_state):
     reward = get_move_reward(action)
 
     old_q_value = q_table[gameboard_as_key][action]
+
+    gameboard_as_key_next = add_coin_key_maker(action)
+                    
+    if gameboard_as_key_next not in q_table:
+        q_table[gameboard_as_key_next] = {el: 0 for el in NOT_TOPPED_OUT}
+
+
+
     temporal_difference = reward + \
         (DISCOUNT_FACTOR * q_table[gameboard_as_key]
-         [keywithmaxval(q_table[gameboard_as_key])]) - old_q_value
+         [keywithmaxval(q_table[gameboard_as_key_next])]) - old_q_value
 
+    interim_dict = q_table[gameboard_as_key]
     new_q_value = old_q_value + (LEARNING_RATE * temporal_difference)
-    q_table[gameboard_as_key][action] = new_q_value
+    interim_dict[action] = new_q_value
+
+    q_table[gameboard_as_key] = interim_dict
 
     print(q_table[gameboard_as_key])
 
@@ -335,7 +367,7 @@ def take_input(player):
     '''takes input if users chance, otherwise generates ai_move'''
 
 
-    if player == 9: #change to 7 for 
+    if player == 7: #change to 7 for 
         COIN = 5
         #print_gameboard()
         swap_gameboard()
@@ -350,7 +382,7 @@ def take_input(player):
     if player == 9:
         return random.choice(NOT_TOPPED_OUT)
 
-    if player == 7:
+    if player == 8:
         move = input('drop COIN at: ').rstrip()
         while valid_move_x(move) is False:
             move = input('last input invalid, go again: ').rstrip()
