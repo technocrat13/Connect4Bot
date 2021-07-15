@@ -21,4 +21,4 @@ jobs:
         pip install pylint
     - name: Run Pylint
       run: |
-        python lint.py --path ./src --threshold 9.5
+        python lint.py --path ./train.py --threshold 9.5
