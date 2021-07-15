@@ -23,4 +23,3 @@ jobs:
       run: |
         pylint test_train.py
         pylint train.py
-        pylint gameAIButBetter.py
