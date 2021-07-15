@@ -377,7 +377,7 @@ if __name__ == '__main__':
     q_table = shelve.open('q_table_shelf.db',  writeback=True)
 
     for e in range(EPISODES):
-        #print('---------------------------------------new game----------------------------------------')
+        #print('----------------------------------new game------------------------------------')
         gameboard = [[0 for j in range(x)] for i in range(y)]
         TURN = 0
         COIN = 7
@@ -391,19 +391,19 @@ if __name__ == '__main__':
 
             #print_gameboard()
             TURN = TURN + 1
-    
+
             if TURN == 42:
                 print('omg a draw!!1! at game: ' +
                       str(e + 1) + '/' + str(EPISODES))
                 DRAW = True
                 break
-            
+
         #print_gameboard()
 
         MOVES = []
         TOPPED_OUT = []
         NOT_TOPPED_OUT = list(range(x))
-    
+
         if DRAW is False:
             if COIN == 7:
                 WINS_7 = WINS_7 + 1
@@ -427,4 +427,4 @@ if __name__ == '__main__':
 
 
     q_table.close()
-    
+

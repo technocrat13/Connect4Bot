@@ -12,7 +12,7 @@ gameboard = [[0 for j in range(x)] for i in range(y)]
 COIN = 7
 MOVES = []
 TOPPED_OUT = []
-NOT_TOPPED_OUT = [i for i in range(x)]
+NOT_TOPPED_OUT = list(range(x))
 
 print('loading shelve....')
 q_table = shelve.open('q_table_shelf.db',  writeback=True)
@@ -103,6 +103,8 @@ def probable_move(x_pos, y_pos):
 
 
 def keywithmaxval(dic):
+    '''retruns the key of the highest value in the dictionary'''
+
     k = list(dic.keys())
     val = np.array(list(dic.values()))
     return k[int(random.choice(np.argwhere(val == np.amax(val))))]
@@ -351,6 +353,8 @@ def take_input(player):
 
 
 def stamp_time():
+    '''now time - start time is printed in hours'''
+
     later_time = datetime.datetime.now()
     difference = later_time - first_time
     print(str(divmod((difference.days * 24 * 60 * 60) +
@@ -399,7 +403,7 @@ for e in range(EPISODES):
 
     MOVES = []
     TOPPED_OUT = []
-    NOT_TOPPED_OUT = [i for i in range(x)]
+    NOT_TOPPED_OUT = list(range(x))
 
     if DRAW is False:
         if COIN == 7:
