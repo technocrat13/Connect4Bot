@@ -12,7 +12,7 @@ gameboard = [[0 for j in range(x)] for i in range(y)]
 COIN = 7
 MOVES = []
 TOPPED_OUT = []
-NOT_TOPPED_OUT = [i for i in range(x)]
+NOT_TOPPED_OUT = list(range(x))
 
 #print('loading shelve....')
 #q_table = shelve.open('q_table_shelf.db',  writeback=True)
@@ -103,6 +103,8 @@ def probable_move(x_pos, y_pos):
 
 
 def keywithmaxval(dic):
+    '''retruns the key of the highest value in the dictionary'''
+
     k = list(dic.keys())
     val = np.array(list(dic.values()))
     return k[int(random.choice(np.argwhere(val == np.amax(val))))]
@@ -208,6 +210,7 @@ def add_coin(x_pos):
             top[x_pos] = top[x_pos] - 1
             return check_connect_4(x_pos, y_pos)
 
+    #return 'not valid'
 
 def add_coin_key_maker(x_pos):
     '''adds a coin at given position tempraraitoly'''
@@ -351,6 +354,8 @@ def take_input(player):
 
 
 def stamp_time():
+    '''print the time taken since '''
+
     later_time = datetime.datetime.now()
     difference = later_time - first_time
     print(str(divmod((difference.days * 24 * 60 * 60) +
@@ -377,13 +382,13 @@ if __name__ == '__main__':
         TURN = 0
         COIN = 7
         top = [5 for i in range(x)]
-    
+
         while add_coin(take_input(COIN)) != '4connected':
             if TURN % 2 == 0:
                 COIN = 5
             else:
                 COIN = 7
-    
+
             #print_gameboard()
             TURN = TURN + 1
     
@@ -394,10 +399,10 @@ if __name__ == '__main__':
                 break
             
         #print_gameboard()
-    
+
         MOVES = []
         TOPPED_OUT = []
-        NOT_TOPPED_OUT = [i for i in range(x)]
+        NOT_TOPPED_OUT = list(range(x))
     
         if DRAW is False:
             if COIN == 7:
@@ -408,18 +413,18 @@ if __name__ == '__main__':
         else:
             DRAWS = DRAWS + 1
             DRAW = False
-    
+
         if (e + 1) % (EPISODES/100) == 0:
             print('5 wins: ' + str(WINS_5) + ' | 7 wins: ' +
                   str(WINS_7) + ' | draws: ' + str(DRAWS))
             print('5 win%: ' + str(WINS_5 * 100 / (e + 1)) + ' | 7 win%: ' +
                   str(WINS_7 * 100 / (e + 1)) + ' | draw%: ' + str(DRAWS * 100 / (e + 1)))
             print(str(((e + 1) / EPISODES) * 100) + '%' + ' completion')
-    
+
             print('quicksaving')
             q_table.sync()
             stamp_time()
-    
-    
+
+
     q_table.close()
     

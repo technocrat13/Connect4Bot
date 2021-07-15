@@ -1,5 +1,5 @@
+'''to test all core functions of connect4'''
 
-import numpy as np
 import train
 
 y, x = 6, 7
