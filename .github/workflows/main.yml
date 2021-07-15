@@ -21,4 +21,6 @@ jobs:
         pip install pylint
     - name: Analysing the code with pylint
       run: |
-        pylint
+        pylint test_train.py
+        pylint train.py
+        pylint gameAIButBetter.py
