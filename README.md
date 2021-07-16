@@ -15,14 +15,6 @@ Python bot to play connect4, uses Q-Learning based on the Greedy Epsilon Bellman
 pip install numpy
 ```
 
-
-## Information
-
-The gameboard is a 2D list and is represented in the following image, positions to drop a `COIN` are from 1 to 7, player one is `7`, the AI is player two or `5`. `0` represents an empty space.
-
-![gameboard image](gameboardinfo.png)
-
-
 ## Usage
 	
 * To play a best of 3 against the AI:
@@ -37,6 +29,16 @@ The gameboard is a 2D list and is represented in the following image, positions 
 	python train.py
 	```
 	By default this will train the model for 60,000 episodes, the model in `q_table_shelf.db` has been trained for 200,000 episodes/10 hours.
+	
+
+
+## Information
+
+The gameboard is a 2D list and is represented in the following image, positions to drop a `COIN` are from 1 to 7, player one is `7`, the AI is player two or `5`. `0` represents an empty space.
+
+![gameboard image](gameboardinfo.png)
+
+
 
 
 ## References
