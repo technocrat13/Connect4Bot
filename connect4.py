@@ -30,8 +30,12 @@ def take_input_gamer(player):
 
 
 
+try:
+    key_press = input('start a best of 3 with the AI (Y/N): ').rstrip()[0]
 
-key_press = input('start a best of 3 with the AI (Y/N): ').rstrip()[0]
+except EOFError as error_mess:
+    print(error_mess)
+    key_press = 'n'
 
 
 if key_press in ['y', 'Y']:
