@@ -23,4 +23,7 @@ jobs:
         python connect4.py
     - name: Test game
       run: |
-        n
+        5
+        \n
+        4
+        \n
