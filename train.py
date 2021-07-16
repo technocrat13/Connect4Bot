@@ -361,9 +361,9 @@ def stamp_time():
     print(str(divmod((difference.days * 24 * 60 * 60) +
                      difference.seconds, 60)[0] / 60) + ' Hours gone by')
 
-
-EPISODES = 300000
-
+###########################
+EPISODES = 60000  #change episodes here <----------
+###########################
 WINS_7 = 0
 WINS_5 = 0
 DRAWS = 0
