@@ -18,7 +18,7 @@ pip install numpy
 
 ## Information
 
-The gameboard is a 2D list and is represented in the following image, positions to drop a `COIN` are from 1 to 7, player one is `7`, the AI is player two or `5`
+The gameboard is a 2D list and is represented in the following image, positions to drop a `COIN` are from 1 to 7, player one is `7`, the AI is player two or `5`. `0` represents an empty space 
 
 ![gameboard image](gameboardinfo.png)
 
