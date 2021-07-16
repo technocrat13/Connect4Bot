@@ -1,5 +1,10 @@
-import train
+'''main program to play a best of three with the AI trained or untrained, to train use train.py'''
+
+
 import shelve
+import train
+import sys
+
 
 y, x = 6, 7
 
@@ -77,7 +82,7 @@ if key_press in ['y', 'Y']:
     print('5 win%: ' + str(train.WINS_5 * 100 / (e + 1)) + ' | 7 win%: ' +
           str(train.WINS_7 * 100 / (e + 1)) + ' | draw%: ' + str(train.DRAWS * 100 / (e + 1)))
     print(str(((e + 1) / train.EPISODES) * 100) + '%' + ' completion')
-            
+
     print('quicksaving')
     train.q_table.sync()
     train.stamp_time()
@@ -85,8 +90,5 @@ if key_press in ['y', 'Y']:
     train.q_table.close()
 
 else:
-    exit(0)
-
-
-
+    sys.exit(0)
 
