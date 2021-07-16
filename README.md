@@ -1,7 +1,8 @@
 
 # Connect4 AI
-![pylint](https://github.com/technocrat13/Connect4Bot/actions/workflows/main.yml/badge.svg)
-![pytest](https://github.com/technocrat13/Connect4Bot/actions/workflows/pytest.yml/badge.svg)
+![pylint](https://github.com/technocrat13/Connect4Bot/actions/workflows/pylint.yml/badge.svg)(https://github.com/technocrat13/Connect4Bot/actions/workflows/pylint.yml)
+![pytest](https://github.com/technocrat13/Connect4Bot/actions/workflows/pytest.yml/badge.svg)(https://github.com/technocrat13/Connect4Bot/actions/workflows/pytest.yml)
+![Build](https://github.com/technocrat13/Connect4Bot/actions/workflows/build.yml/badge.svg)](https://github.com/technocrat13/Connect4Bot/actions/workflows/build.yml)
 
 
 Python bot to play connect4, uses Q-Learning based on the Greedy Epsilon Bellman Equation 
