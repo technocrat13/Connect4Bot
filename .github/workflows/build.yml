@@ -20,10 +20,4 @@ jobs:
         pip install pylint
     - name: Running game
       run: |
-        python connect4.py
-    - name: Test game
-      run: |
-        5
-        \n
-        4
-        \n
+        python train.py
