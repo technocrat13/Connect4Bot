@@ -362,7 +362,7 @@ def stamp_time():
                      difference.seconds, 60)[0] / 60) + ' Hours gone by')
 
 ###########################
-EPISODES = 60000  #change episodes here <----------
+EPISODES = 10  #change episodes here <----------
 ###########################
 WINS_7 = 0
 WINS_5 = 0
