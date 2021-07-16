@@ -2,8 +2,8 @@
 
 
 import shelve
-import train
 import sys
+import train
 
 
 y, x = 6, 7
@@ -91,4 +91,3 @@ if key_press in ['y', 'Y']:
 
 else:
     sys.exit(0)
-
