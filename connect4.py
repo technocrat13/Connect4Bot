@@ -35,7 +35,7 @@ try:
 
 except EOFError as error_mess:
     print(error_mess)
-    key_press = 'n'
+    key_press = 'y'
 
 
 if key_press in ['y', 'Y']:
