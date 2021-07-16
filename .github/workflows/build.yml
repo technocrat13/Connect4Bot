@@ -21,3 +21,6 @@ jobs:
     - name: Running game
       run: |
         python connect4.py
+    - name: Test game
+      run: |
+        n
