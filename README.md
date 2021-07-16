@@ -30,9 +30,7 @@ The gameboard is a 2D list and is represented in the following image, positions 
 	```bash
 	python connect4.py
 	```
-	The gameboard is a 2D list and is represented in the following image, positions to drop a `COIN` are from 1 to 7, player one is `7`, the AI is player two or `5`
-	
-	![gameboard image](gameboardinfo.png)
+
 
 * To train the model:
 	```bash
