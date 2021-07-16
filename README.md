@@ -26,7 +26,7 @@ pip install numpy
 	```bash
 	python train.py
 	```
-	By default this will train the model for 60000 episodes, the model in `q_table_shelf.db` has been trained for 200,000 episodes over 10 hours
+	By default this will train the model for 60,000 episodes, the model in `q_table_shelf.db` has been trained for 200,000 episodes/10 hours
 
 
 ## References
