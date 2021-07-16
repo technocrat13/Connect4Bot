@@ -6,11 +6,11 @@
 
 
 
-Python bot to play connect4, uses Q-Learning based on the Greedy Epsilon Bellman Equation 
+Python bot to play connect4, uses Q-Learning based on the Greedy Epsilon Bellman Equation.
 ## Installation
 
-1. Unzip `q_table_shelf.db.zip` and place the three files in root
-2. Install numpy
+1. Unzip `q_table_shelf.db.zip` and place the three files in root.
+2. Install `numpy`
 ```bash
 pip install numpy
 ```
@@ -18,7 +18,7 @@ pip install numpy
 
 ## Information
 
-The gameboard is a 2D list and is represented in the following image, positions to drop a `COIN` are from 1 to 7, player one is `7`, the AI is player two or `5`. `0` represents an empty space 
+The gameboard is a 2D list and is represented in the following image, positions to drop a `COIN` are from 1 to 7, player one is `7`, the AI is player two or `5`. `0` represents an empty space.
 
 ![gameboard image](gameboardinfo.png)
 
@@ -36,7 +36,7 @@ The gameboard is a 2D list and is represented in the following image, positions 
 	```bash
 	python train.py
 	```
-	By default this will train the model for 60,000 episodes, the model in `q_table_shelf.db` has been trained for 200,000 episodes/10 hours
+	By default this will train the model for 60,000 episodes, the model in `q_table_shelf.db` has been trained for 200,000 episodes/10 hours.
 
 
 ## References
