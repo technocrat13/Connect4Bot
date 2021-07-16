@@ -18,37 +18,7 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r requirements.txt
         pip install pylint
-    - name: Analysing the code with pylint
+    - name: Running game
       run: |
         python connect4.py
-        y
-        \n
-        5
-        \n
-        5
-        \n
-        5
-        \n
-        5
-        \n
-        5
-        \n
-        6
-        \n
-        6
-        \n
-        6
-        \n
-        6
-        \n
-        6
-        \n
-        6
-        \n
-        7
-        \n
-        7
-        \n
-        7
-        \n
-        7
+        y\n5\n5\n5\n5\n5\n6\n6\n6\n6\n6\n6\n7\n7\n7\n7
