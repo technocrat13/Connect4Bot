@@ -42,6 +42,6 @@ The gameboard is a 2D list and is represented in the following image, positions 
 
 
 ## References
-
++ Trust me bro
 + [An AI agent learns to play tic-tac-toe (part 3): training a Q-learning RL agent](https://towardsdatascience.com/an-ai-agent-learns-to-play-tic-tac-toe-part-3-training-a-q-learning-rl-agent-2871cef2faf0)
 + [Notebook for Topic 08 Video - Q-Learning - A Complete Example in Python.ipynb](https://colab.research.google.com/drive/1E2RViy7xmor0mhqskZV14_NUj2jMpJz3#scrollTo=Kq-QPfDnx4Fo)
