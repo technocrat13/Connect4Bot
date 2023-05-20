@@ -20,34 +20,43 @@ class Connect4:
         '''prints gameboard'''
 
         for i in self.gameboard:
-            print(i)
+            print(''.join(f'{x:3}' for x in i))
 
 
     def check_connect_4(self, x_pos, y_pos):
         '''checks if there is a 4 sequence from the recived x and y coord'''
 
         # Vertical check
-        if y_pos <= 2 and np.sum(self.gameboard[y_pos: y_pos + 4][x_pos]) == 4 * self.coin:
+        # print(self.gameboard[y_pos:y_pos+4, x_pos])
+        if y_pos <= 2 and np.sum(self.gameboard[y_pos: y_pos + 4, x_pos]) == 4 * self.coin:
             return True
 
         # Horizontal check
         for i in range(0, 4):
             curr_x_pos = x_pos - i
-            if 0 <= curr_x_pos <= 3 and np.sum(self.gameboard[y_pos][curr_x_pos:curr_x_pos + 4] == 4 * self.coin):
+            # print(curr_x_pos)
+            # print(self.gameboard[y_pos, curr_x_pos:curr_x_pos + 4])
+            if 0 <= curr_x_pos <= 3 and np.sum(self.gameboard[y_pos, curr_x_pos:curr_x_pos + 4]) == 4 * self.coin:
                 return True
 
         # Diagonal \ check
         for i in range(0, 4):
             curr_x_pos = x_pos - i
             curr_y_pos = y_pos - i
-            if 0 <= curr_x_pos <= 3 and 0 <= curr_y_pos <= 2 and np.sum(np.diag(self.gameboard[curr_y_pos:curr_y_pos+4][curr_x_pos:curr_x_pos+4])) == 4 * self.coin:
+            # print(f'{curr_x_pos = }')
+            # print(f'{curr_y_pos = }')
+            # print(self.gameboard[curr_y_pos:curr_y_pos+4, curr_x_pos:curr_x_pos+4])
+            if 0 <= curr_x_pos <= 3 and 0 <= curr_y_pos <= 2 and np.sum(np.diag(self.gameboard[curr_y_pos:curr_y_pos+4, curr_x_pos:curr_x_pos+4])) == 4 * self.coin:
                 return True
             
         # Diagonal / check
         for i in range(0, 4):
             curr_x_pos = x_pos - i
-            curr_y_pos = y_pos - i
-            if 0 <= curr_x_pos <= 3 and 0 <= curr_y_pos <= 2 and np.sum(np.flip(self.gameboard[curr_y_pos:curr_y_pos+4][curr_x_pos-3:curr_x_pos+1], axis=1).diagonal()) == 4 * self.coin:
+            curr_y_pos = y_pos + i
+            # print(f'{curr_x_pos = }')
+            # print(f'{curr_y_pos = }')
+            # print(self.gameboard[curr_y_pos-3:curr_y_pos+1, curr_x_pos:curr_x_pos+4])
+            if 0 <= curr_x_pos <= 3 and 4 <= curr_y_pos <= self.Y-1 and np.sum(np.flip(self.gameboard[curr_y_pos-3:curr_y_pos+1, curr_x_pos:curr_x_pos+4], axis=1).diagonal()) == 4 * self.coin:
                 return True
 
         return False
@@ -70,29 +79,28 @@ class Connect4:
             self.gameboard[self.top_row[x_pos]][x_pos] = self.coin
             self.top_row[x_pos] = self.top_row[x_pos] - 1
             
-            if self.check_connect_4(x_pos, self.top_row[x_pos] - 1):
+            if self.check_connect_4(x_pos, self.top_row[x_pos] + 1):
                 self.is_game_ended = True
                 return '4connected'
             
-            
-
             self.coin = - self.coin
-
-            return False
-
+            return 'next_move'
 
         return 'ERR_rowtoppedout'
-
-
-    def take_input(self, x_pos):
-        '''sanitizes and checks if given position is valid or not'''
-
-        
+       
 
 
 def main():
     '''game enters here'''
-    return 0
+    
+    game = Connect4()
+    game.print_gameboard()
+
+    while not game.is_game_ended:
+        print(game.add_coin(input().rstrip()))
+        game.print_gameboard()
+
+    print('game ended!', game.coin, 'wins!')
 
 if __name__ == '__main__':
     main()
