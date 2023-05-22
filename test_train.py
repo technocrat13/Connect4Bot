@@ -1,19 +1,20 @@
 '''to test all core functions of connect4'''
 
-import game_connect4
+import webapp.game_connect4 as game_connect4
+import numpy as np
 
 train = game_connect4.Connect4()
 
 def test_check_connect_4():
     '''tests 4 points for connect 4s'''
 
-    train.gameboard = [ [ 0,  0,  0,  0,  0,  0,  0],
+    train.gameboard = np.array([ [ 0,  0,  0,  0,  0,  0,  0],
                         [ 0,  0,  0,  0,  0,  0,  0],
                         [ 0, -1,  0,  0,  0,  1,  0],
                         [ 0, -1,  0,  0,  1, -1,  0],
                         [ 0, -1,  0,  1,  1, -1,  0],
                         [ 0, -1,  1, -1, -1, -1, -1],
-                ]
+                ])
 
     assert train.check_connect_4(4, 3) == True
     assert train.check_connect_4(2, 4) is False
