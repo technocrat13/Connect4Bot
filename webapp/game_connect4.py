@@ -58,7 +58,7 @@ class Connect4:
 
         try:
             x_pos = int(x_pos) - 1
-            if  x_pos < 0 and x_pos > 6:
+            if  x_pos < 0 or x_pos > 6:
                 return 'ERR_inputoutofbounds'
             
         except ValueError:
@@ -71,10 +71,10 @@ class Connect4:
             
             if self.check_connect_4(x_pos, self.top_row[x_pos] + 1):
                 self.is_game_ended = True
-                return '4connected'
+                return 'GAME_OVER_4connected'
             
             if sum(self.top_row) == -self.X:
-                return 'nomoremovesleft'
+                return 'GAME_OVER_nomoremovesleft'
 
             self.coin = - self.coin
             return 'next_move'
