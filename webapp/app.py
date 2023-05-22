@@ -12,6 +12,7 @@ game = Connect4()
 @app.route('/')
 def index():
     global game
+    game = Connect4()
     return render_template('index.html', game=game.gameboard.tolist())
 
 @app.route('/start_game', methods=['GET'])
@@ -32,6 +33,12 @@ def reset():
     global game
     game.reset()
     return jsonify({'game': game.gameboard.tolist(), 'coin': game.coin})
+
+@app.route('/ai_move', methods=['POST'])
+def ai_move():
+    global game
+    result = game.add_coin(game.generate_move())
+    return jsonify({'result': result, 'game': game.gameboard.tolist(), 'coin': game.coin})
 
 if __name__ == "__main__":
     app.run(debug=True)

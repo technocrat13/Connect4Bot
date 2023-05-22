@@ -85,21 +85,77 @@ body {
     background-color: yellow;
 }
 
+#game-board {
+    position: relative; /* Add this line */
+}
+
 @keyframes shake {
     0%   { transform: translate(0px, 0px) rotate(0deg); }
-    10%  { transform: translate(0px, -1px) rotate(-1deg); }
+    /* 10%  { transform: translate(0px, -1px) rotate(-1deg); } */
     20%  { transform: translate(-2px, 0px) rotate(1deg); }
-    30%  { transform: translate(2px, 1px) rotate(0deg); }
+    /* 30%  { transform: translate(2px, 1px) rotate(0deg); } */
     40%  { transform: translate(0px, 0px) rotate(1deg); }
     50%  { transform: translate(0px, 1px) rotate(-1deg); }
     60%  { transform: translate(-2px, 0px) rotate(0deg); }
-    70%  { transform: translate(2px, 0px) rotate(-1deg); }
+    /* 70%  { transform: translate(2px, 0px) rotate(-1deg); } */
     80%  { transform: translate(0px, 0px) rotate(1deg); }
-    90%  { transform: translate(0px, 1px) rotate(0deg); }
+    /* 90%  { transform: translate(0px, 1px) rotate(0deg); } */
     100% { transform: translate(0px, -1px) rotate(-1deg); }
 }
 
 .shake {
     animation: shake 0.3s;
     animation-iteration-count: 1;
+}
+
+#player-turn {
+    width: 40px;
+    height: 40px;
+    border: 1px solid #ddd;
+    border-radius: 50%;
+    display: inline-block;
+    margin: 5px auto;
+    text-align: center;
+    vertical-align: bottom;
+    margin-right: 10px;
+    background-color: red;
+}
+
+.spinner {
+    margin: 100px auto;
+    width: 40px;
+    height: 40px;
+    position: relative;
+    z-index: 10;
+}
+.spinner::before {
+    content: "";
+    display: block;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 24px;
+    height: 24px;
+    margin-left: -12px;
+    margin-top: -12px;
+    border-radius: 50%;
+    border: 2px solid #ccc;
+    border-top-color: #333;
+    animation: spin 1s linear infinite;
+}
+@keyframes spin {
+    to { transform: rotate(1turn); }
+}
+
+#game-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 10;
 }

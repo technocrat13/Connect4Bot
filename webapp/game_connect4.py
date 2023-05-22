@@ -11,7 +11,7 @@ class Connect4:
         self.gameboard = np.array([[0] * X] * Y)
         self.topped_out = [False] * X
 
-        self.top_row = [Y-1] * X
+        self.top_row = np.array([Y-1] * X)
         
         self.is_game_ended = False
         self.coin = 1
@@ -87,10 +87,17 @@ class Connect4:
 
         self.gameboard = np.array([[0] * self.X] * self.Y)
         self.topped_out = [False] * self.X
-        self.top_row = [self.Y-1] * self.X
+        self.top_row = np.array([self.Y-1] * self.X)
         self.is_game_ended = False
         self.coin = 1
        
+    def generate_move(self):
+
+        choices = np.where(self.top_row >= 0)[0]
+        # print(choices)
+        
+        return np.random.choice(choices, 1) + 1
+    
 
 
 def main():
@@ -101,6 +108,8 @@ def main():
 
     while not game.is_game_ended:
         print(game.add_coin(input().rstrip()))
+        game.print_gameboard()
+        print(game.add_coin(game.generate_move()))
         game.print_gameboard()
 
     print('game ended!', game.coin, 'wins!')
