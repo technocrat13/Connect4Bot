@@ -26,7 +26,9 @@ def play():
     global game
     x = int(request.json.get('x')) if request.json.get('x') is not None else None
     result = game.add_coin(x)
-    return jsonify({'result': result, 'game': game.gameboard.tolist(), 'coin': game.coin})
+    x = int(x -1)
+    y = int(game.top_row[x]+1)
+    return jsonify({'result': result, 'game': game.gameboard.tolist(), 'coin': game.coin, 'x': x, 'y':y})
 
 @app.route('/reset', methods=['POST'])
 def reset():
@@ -37,8 +39,10 @@ def reset():
 @app.route('/ai_move', methods=['POST'])
 def ai_move():
     global game
-    result = game.add_coin(game.generate_move())
-    return jsonify({'result': result, 'game': game.gameboard.tolist(), 'coin': game.coin})
+    x = game.generate_move()
+    result = game.add_coin(x)
+    y = int(game.top_row[x-1]+1)
+    return jsonify({'result': result, 'game': game.gameboard.tolist(), 'coin': game.coin, 'x': int(x), 'y':y})
 
 if __name__ == "__main__":
     app.run(debug=True)

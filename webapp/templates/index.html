@@ -4,6 +4,8 @@
 <head>
     <title>Connect 4</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <!-- <link  rel="stylesheet" href="https://fonts.cdnfonts.com/css/product-sans"> -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/mortezaom/google-sans-cdn@master/fonts.css" />
     <link rel="stylesheet" type="text/css" href="/static/styles.css">
 </head>
 
@@ -17,20 +19,21 @@
                     <div class="modal-header">
                         <h5 class="modal-title">Who goes first?</h5>
                     </div>
-                    <div class="modal-body text-center">
-                        <div class="choice-option" id="player-first">
+                    <div class="modal-body text-center d-flex justify-content-around">
+                        <div class="choice-option" id="player-first" data-choice="player">
                             <img src="/static/images/player.png" alt="Player">
-                            <button type="button" class="btn btn-primary" data-choice="player">Player</button>
+                            <p>Player</p>
                         </div>
-                        <div class="choice-option" id="ai-first">
+                        <div class="choice-option" id="ai-first" data-choice="ai">
                             <img src="/static/images/ai.png" alt="AI">
-                            <button type="button" class="btn btn-primary" data-choice="ai">AI</button>
+                            <p style="text-align: left;">AI Agent</p>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
         
+
         <div id="game-board" class="mt-5">
             {% for row in game %}
             <div class="game-row d-flex justify-content-center">
@@ -39,10 +42,17 @@
                 {% endfor %}
             </div>
             {% endfor %}
+            <canvas id="game-canvas" style="position: absolute; top: 0; left: 0; z-index: 10;"></canvas>
             <div id="game-overlay"></div>
         </div>
         <div id="loading" style="display: none;">
-            <div class="spinner"></div>
+            <div class="loading-wave">
+                <div class="ball"></div>
+                <div class="ball"></div>
+                <div class="ball"></div>
+                <div class="ball"></div>
+                <div class="ball"></div>
+            </div>
         </div>
 
         <button id="reset-button" class="btn btn-primary mt-3" style="display: none;">Reset Game</button>
