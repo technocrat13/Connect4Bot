@@ -104,8 +104,8 @@ class Connect4:
         self.AI_PLAYER = self.coin
         remaining_moves = np.count_nonzero(self.gameboard==0)
 
-        depth = 28.513-1.6*remaining_moves
-        depth = max(45, int(np.ceil(depth)))
+        # depth = 28.513-1.6*remaining_moves
+        depth = 45
 
         print(f'{depth = }')
         return self.get_best_move(depth)
@@ -121,8 +121,8 @@ class Connect4:
             for move in self.get_valid_moves():
                 new_board = deepcopy(self)
                 new_board.add_coin(move + 1) # player changed
-                score = new_board.minimax(depth - 1, float('-inf'), float('inf'), False, move, 0)
-                score_dict[move] = score
+                score = new_board.minimax(depth, float('-inf'), float('inf'), False, move, 0)
+                score_dict[move] =  score_dict.get(move, 0) + score
 
 
             print(score_dict)
