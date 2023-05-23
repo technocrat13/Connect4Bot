@@ -1,6 +1,6 @@
 from flask import Flask, jsonify, request, render_template
 from flask_cors import CORS
-from game_connect4 import Connect4
+from game_connect4 import Connect4, transposition_table
 import numpy as np
 import json
 
@@ -33,7 +33,9 @@ def play():
 @app.route('/reset', methods=['POST'])
 def reset():
     global game
+    global transposition_table
     game.reset()
+    transposition_table = {}
     return jsonify({'game': game.gameboard.tolist(), 'coin': game.coin})
 
 @app.route('/ai_move', methods=['POST'])

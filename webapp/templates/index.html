@@ -9,8 +9,8 @@
     <link rel="stylesheet" type="text/css" href="/static/styles.css">
 </head>
 
-<body>
-    <div class="container d-flex flex-column justify-content-center align-items-center" style="padding-top: 2vh;">
+<body id="body">
+    <div class="container d-flex flex-column justify-content-center align-items-center" style="position: relative; padding-top: 2vh;">
         <h1><span id="player-turn"></span>Connect4</h1>
         <!-- Bootstrap Modal -->
         <div id="startModal" class="modal">
@@ -57,9 +57,12 @@
 
         <button id="reset-button" class="btn btn-primary mt-3" style="display: none;">Reset Game</button>
         <div id="message" class="mt-3" style="display: none;"></div>
+        
 
 
     </div>
+    <button id="dark-mode" class="ankush-darkmode btn btn-primary mt-3">dark mode</button>
+    <button id="light-mode" class="ankush-darkmode btn btn-primary mt-3" style="display: none;">light mode</button>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
     <script src="/static/script.js"></script>

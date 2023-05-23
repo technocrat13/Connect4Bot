@@ -1,7 +1,7 @@
 $(document).ready(function () {
 
     $('#startModal').modal('show');
-
+    $('#game-overlay').show();
     // Handle player choosing to go first
     $('#player-first').click(function () {
         $('#startModal').modal('hide');
@@ -36,11 +36,11 @@ $(document).ready(function () {
                     $('#message').text('The row is topped out!').show().delay(2000).fadeOut();
                 } else if (response.result === 'GAME_OVER_4connected') {
                     // Show who won
-                    const lastMove = [response.y, response.x];
-                    const winningCells = getWinningCells(response.game, lastMove);
-                    if (winningCells) {
-                        drawWinningLine(winningCells);
-                    }
+                    // const lastMove = [response.y, response.x];
+                    // const winningCells = getWinningCells(response.game, lastMove);
+                    // if (winningCells) {
+                    //     drawWinningLine(winningCells);
+                    // }
                     updateBoard(response.game);
                     var winner = response.coin === 1 ? 'Red' : 'Yellow';
                     $('#message').text(winner + ' wins!').show();
@@ -120,11 +120,11 @@ $(document).ready(function () {
                 success: function (response) {
                     if (response.result === 'GAME_OVER_4connected') {
                         // Show who won
-                        const lastMove = [response.y, response.x];
-                        const winningCells = getWinningCells(response.game, lastMove);
-                        if (winningCells) {
-                            drawWinningLine(winningCells);
-                        }
+                        // const lastMove = [response.y, response.x];
+                        // const winningCells = getWinningCells(response.game, lastMove);
+                        // if (winningCells) {
+                        //     drawWinningLine(winningCells);
+                        // }
                         updateBoard(response.game);
                         var winner = response.coin === 1 ? 'Red' : 'Yellow';
                         $('#message').text(winner + ' wins, shown up by an AI lmao').show();
@@ -153,6 +153,20 @@ $(document).ready(function () {
             });
         }, 300);  // Delay for 1 seconds
     }
+
+
+
+    $('#dark-mode').click(function () {
+        $('#body').addClass('darkmode');
+        $('#dark-mode').hide();
+        $('#light-mode').show();
+    });
+
+    $('#light-mode').click(function () {
+        $('#body').removeClass('darkmode');
+        $('#light-mode').hide();
+        $('#dark-mode').show();
+    });
 
     function getWinningCells(board, lastMove) {
         const [row, col] = lastMove;

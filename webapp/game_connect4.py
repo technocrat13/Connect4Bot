@@ -17,6 +17,7 @@ class Connect4:
         self.is_game_ended = False
         self.coin = 1
         self.AI_PLAYER = None
+        self.killer_moves = [None] * 100
 
     def print_gameboard(self):
         '''prints gameboard'''
@@ -87,42 +88,53 @@ class Connect4:
     def reset(self):
         '''reset all attributes about the current class instance'''
 
-
+        global transposition_table 
+        transposition_table = {}
         self.gameboard = np.array([[0] * self.X] * self.Y)
         self.topped_out = [False] * self.X
         self.top_row = np.array([self.Y-1] * self.X)
         self.is_game_ended = False
         self.coin = 1
         self.AI_PLAYER = None
+
+        self.killer_moves = [None] * 100
        
     def generate_move(self):
 
         self.AI_PLAYER = self.coin
         remaining_moves = np.count_nonzero(self.gameboard==0)
 
-        depth = 13.513-0.224*remaining_moves
-        depth = max(5, int(np.floor(depth)) - 2)
+        depth = 28.513-1.6*remaining_moves
+        depth = max(45, int(np.ceil(depth)))
 
         print(f'{depth = }')
         return self.get_best_move(depth)
     
-    def get_best_move(self, depth):
-        score_dict = {}
+    def get_best_move(self, max_depth):
+        
+        best_move = None
+        best_score = float('-inf')
 
-        for move in self.get_valid_moves():
-            new_board = deepcopy(self)
-            if new_board.add_coin(move + 1) == 'GAME_OVER_4connected': # player changed
-                return move + 1
-            score = new_board.minimax(depth - 1, False, move, 0)
-            score_dict[move] = score_dict.get(move, 0) + score
+        for depth in range(2, max_depth + 1):
+            score_dict = {}
+
+            for move in self.get_valid_moves():
+                new_board = deepcopy(self)
+                new_board.add_coin(move + 1) # player changed
+                score = new_board.minimax(depth - 1, float('-inf'), float('inf'), False, move, 0)
+                score_dict[move] = score
 
 
-        print(score_dict)
-        max_value = np.max(list(score_dict.values()))
-        max_keys = [k for k, v in score_dict.items() if v == max_value]  # get all keys with max value
-        move = np.random.choice(max_keys) + 1
-        print(move)
-        return move
+            print(score_dict)
+            max_value = np.max(list(score_dict.values()))
+            max_keys = [k for k, v in score_dict.items() if v == max_value]  # get all keys with max value
+            move = np.random.choice(max_keys) + 1
+            
+            if max_value > best_score:
+                best_score = max_value
+                best_move = move
+        print(best_move)
+        return best_move
 
     
     def evaluate(self, x_pos):
@@ -132,7 +144,7 @@ class Connect4:
 
         if not self.is_game_ended:
 
-            return multiplier * sum(self.top_row + self.X)
+            return multiplier * np.count_nonzero(self.gameboard==0)
 
         if not self.check_connect_4(x_pos, self.top_row[x_pos] + 1):
             # draw
@@ -145,37 +157,106 @@ class Connect4:
     def get_valid_moves(self):
         # print(np.where(self.top_row >= 0)[0])
         return np.where(self.top_row >= 0)[0]
-
-    def minimax(self, depth, is_maximizing_player, x_pos, running_score):
-        # if is_maximizing_player is False:
-        #     current_player = curr_coin
-        #     self.AI_PLAYER = -curr_coin
-        # else:
-        #     current_player = -curr_coin
-        #     self.AI_PLAYER = curr_coin
-
+    
+    def minimax(self, depth, alpha, beta, is_maximizing_player, x_pos, running_score):
         
+        key = np.array2string(self.gameboard).encode()
+
+        if key in transposition_table:
+            return transposition_table[key]
+
         if depth == 0 or self.is_game_ended:
-            return self.evaluate(x_pos) + running_score
+            value = self.evaluate(x_pos) + running_score
+            transposition_table[key] = value
+            return value
 
         if is_maximizing_player:
             max_eval = float('-inf')
-            for move in self.get_valid_moves():
+            killer = self.killer_moves[depth]
+            if killer is not None and killer in self.get_valid_moves():
                 new_board = deepcopy(self)
-                # new_board.coin = self.AI_PLAYER
+                new_board.add_coin(killer + 1)
+                evals = new_board.minimax(depth - 1, alpha, beta, False, killer, self.evaluate(killer) + running_score)
+                if evals > max_eval:
+                    max_eval = evals
+                    alpha = max(alpha, evals)
+                    self.killer_moves[depth] = killer
+                if beta <= alpha:
+                    transposition_table[key] = max_eval
+                    return max_eval
+
+            for move in self.get_valid_moves():
+                if move == killer:
+                    continue
+                new_board = deepcopy(self)
                 new_board.add_coin(move + 1)
-                evals = new_board.minimax(depth - 1, False, move, self.evaluate(x_pos) + running_score)
-                max_eval = max(max_eval, evals)
+                evals = new_board.minimax(depth - 1, alpha, beta, False, move, self.evaluate(move) + running_score)
+                if evals > max_eval:
+                    max_eval = evals
+                    alpha = max(alpha, evals)
+                    self.killer_moves[depth] = move
+                if beta <= alpha:
+                    break
+            transposition_table[key] = max_eval
             return max_eval
         else:
             min_eval = float('inf')
-            for move in self.get_valid_moves():
+            killer = self.killer_moves[depth]
+            if killer is not None and killer in self.get_valid_moves():
                 new_board = deepcopy(self)
-                # new_board.coin = -self.AI_PLAYER
+                new_board.add_coin(killer + 1)
+                evals = new_board.minimax(depth - 1, alpha, beta, True, killer, self.evaluate(killer) + running_score)
+                if evals < min_eval:
+                    min_eval = evals
+                    beta = min(beta, evals)
+                    self.killer_moves[depth] = killer
+                if beta <= alpha:
+                    transposition_table[key] = min_eval
+                    return min_eval
+
+            for move in self.get_valid_moves():
+                if move == killer:
+                    continue
+                new_board = deepcopy(self)
+
                 new_board.add_coin(move + 1)
-                evals = new_board.minimax(depth - 1, True, move, self.evaluate(x_pos) + running_score)
-                min_eval = min(min_eval, evals)
+                evals = new_board.minimax(depth - 1, alpha, beta, True, move, self.evaluate(move) + running_score)
+                if evals < min_eval:
+                    min_eval = evals
+                    beta = min(beta, evals)
+                    self.killer_moves[depth] = move
+                if beta <= alpha:
+                    break
+            transposition_table[key] = min_eval
             return min_eval
+
+global transposition_table
+transposition_table = {}
+    # def minimax(self, depth, is_maximizing_player, x_pos, running_score):
+        
+    #     if depth == 0 or self.is_game_ended:
+    #         return self.evaluate(x_pos) + running_score
+
+    #     if is_maximizing_player:
+    #         max_eval = float('-inf')
+    #         for move in self.get_valid_moves():
+    #             new_board = deepcopy(self)
+    #             # new_board.coin = self.AI_PLAYER
+    #             new_board.add_coin(move + 1)
+    #             evals = new_board.minimax(depth - 1, False, move, self.evaluate(x_pos) + running_score)
+    #             max_eval = max(max_eval, evals)
+    #         return max_eval
+    #     else:
+    #         min_eval = float('inf')
+    #         for move in self.get_valid_moves():
+    #             new_board = deepcopy(self)
+    #             # new_board.coin = -self.AI_PLAYER
+    #             new_board.add_coin(move + 1)
+    #             evals = new_board.minimax(depth - 1, True, move, self.evaluate(x_pos) + running_score)
+    #             min_eval = min(min_eval, evals)
+    #         return min_eval
+
+
 
 
 def main():
