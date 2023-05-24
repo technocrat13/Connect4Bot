@@ -121,8 +121,8 @@ class Connect4:
             for move in self.get_valid_moves():
                 new_board = deepcopy(self)
                 new_board.add_coin(move + 1) # player changed
-                score = new_board.minimax(depth, float('-inf'), float('inf'), False, move, 0)
-                score_dict[move] =  score_dict.get(move, 0) + score
+                score = new_board.minimax(depth - 1, float('-inf'), float('inf'), False, move, 0)
+                score_dict[move] =  score # _dict.get(move, 0) + score
 
 
             print(score_dict)
