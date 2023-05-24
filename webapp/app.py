@@ -26,6 +26,8 @@ def play():
     global game
     x = int(request.json.get('x')) if request.json.get('x') is not None else None
     result = game.add_coin(x)
+    # game.print_gameboard()
+    # print(game.top_row)
     x = int(x -1)
     y = int(game.top_row[x]+1)
     return jsonify({'result': result, 'game': game.gameboard.tolist(), 'coin': game.coin, 'x': x, 'y':y})

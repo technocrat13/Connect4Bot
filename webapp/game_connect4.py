@@ -4,6 +4,8 @@ import numpy as np
 from copy import deepcopy
 
 
+global transposition_table
+transposition_table = {}
 class Connect4:
 
     def __init__(self, Y = 6, X = 7):
@@ -104,6 +106,10 @@ class Connect4:
         self.AI_PLAYER = self.coin
         remaining_moves = np.count_nonzero(self.gameboard==0)
 
+        if remaining_moves > self.X * self.Y - 2:
+            return self.X // 2 + 1
+        
+
         # depth = 28.513-1.6*remaining_moves
         depth = 45
 
@@ -115,13 +121,13 @@ class Connect4:
         best_move = None
         best_score = float('-inf')
 
-        for depth in range(2, max_depth + 1):
+        for depth in range(5, max_depth + 1):
             score_dict = {}
 
             for move in self.get_valid_moves():
                 new_board = deepcopy(self)
                 new_board.add_coin(move + 1) # player changed
-                score = new_board.minimax(depth - 1, float('-inf'), float('inf'), False, move, 0)
+                score = new_board.minimax(depth - 1, float('-inf'), float('inf'), False, move) # , 0)
                 score_dict[move] =  score # _dict.get(move, 0) + score
 
 
@@ -136,6 +142,17 @@ class Connect4:
         print(best_move)
         return best_move
 
+    def count_potential_wins(self, is_opp = 1):
+
+        count = 0
+        for moves in self.get_valid_moves():
+
+            self.gameboard[self.top_row[moves]][moves] = is_opp * self.coin
+            if self.check_connect_4(moves, self.top_row[moves]):
+                count = count + 1
+            self.gameboard[self.top_row[moves], moves] = 0
+        
+        return count
     
     def evaluate(self, x_pos):
         multiplier = -1
@@ -143,14 +160,21 @@ class Connect4:
             multiplier = 1
 
         if not self.is_game_ended:
+            score = 0
 
-            return multiplier * np.count_nonzero(self.gameboard==0)
+            score = score + self.count_potential_wins(is_opp = 1) * 350
+
+            score = score - self.count_potential_wins(is_opp = -1) * 350
+
+            score = score + np.count_nonzero(self.gameboard[:, self.X // 2] == self.coin) * 10
+
+            return multiplier * score
 
         if not self.check_connect_4(x_pos, self.top_row[x_pos] + 1):
             # draw
             return 0
 
-        return multiplier * 1000
+        return multiplier * 3000
 
 
     
@@ -158,7 +182,7 @@ class Connect4:
         # print(np.where(self.top_row >= 0)[0])
         return np.where(self.top_row >= 0)[0]
     
-    def minimax(self, depth, alpha, beta, is_maximizing_player, x_pos, running_score):
+    def minimax(self, depth, alpha, beta, is_maximizing_player, x_pos): #, running_score):
         
         key = np.array2string(self.gameboard).encode()
 
@@ -166,7 +190,7 @@ class Connect4:
             return transposition_table[key]
 
         if depth == 0 or self.is_game_ended:
-            value = self.evaluate(x_pos) + running_score
+            value = self.evaluate(x_pos) #  + running_score
             transposition_table[key] = value
             return value
 
@@ -176,7 +200,7 @@ class Connect4:
             if killer is not None and killer in self.get_valid_moves():
                 new_board = deepcopy(self)
                 new_board.add_coin(killer + 1)
-                evals = new_board.minimax(depth - 1, alpha, beta, False, killer, self.evaluate(killer) + running_score)
+                evals = new_board.minimax(depth - 1, alpha, beta, False, killer) #, self.evaluate(killer) + running_score)
                 if evals > max_eval:
                     max_eval = evals
                     alpha = max(alpha, evals)
@@ -190,7 +214,7 @@ class Connect4:
                     continue
                 new_board = deepcopy(self)
                 new_board.add_coin(move + 1)
-                evals = new_board.minimax(depth - 1, alpha, beta, False, move, self.evaluate(move) + running_score)
+                evals = new_board.minimax(depth - 1, alpha, beta, False, move) #, self.evaluate(move) + running_score)
                 if evals > max_eval:
                     max_eval = evals
                     alpha = max(alpha, evals)
@@ -205,7 +229,7 @@ class Connect4:
             if killer is not None and killer in self.get_valid_moves():
                 new_board = deepcopy(self)
                 new_board.add_coin(killer + 1)
-                evals = new_board.minimax(depth - 1, alpha, beta, True, killer, self.evaluate(killer) + running_score)
+                evals = new_board.minimax(depth - 1, alpha, beta, True, killer) #, self.evaluate(killer) + running_score)
                 if evals < min_eval:
                     min_eval = evals
                     beta = min(beta, evals)
@@ -220,7 +244,7 @@ class Connect4:
                 new_board = deepcopy(self)
 
                 new_board.add_coin(move + 1)
-                evals = new_board.minimax(depth - 1, alpha, beta, True, move, self.evaluate(move) + running_score)
+                evals = new_board.minimax(depth - 1, alpha, beta, True, move) #, self.evaluate(move) + running_score)
                 if evals < min_eval:
                     min_eval = evals
                     beta = min(beta, evals)
@@ -230,8 +254,6 @@ class Connect4:
             transposition_table[key] = min_eval
             return min_eval
 
-global transposition_table
-transposition_table = {}
     # def minimax(self, depth, is_maximizing_player, x_pos, running_score):
         
     #     if depth == 0 or self.is_game_ended:
