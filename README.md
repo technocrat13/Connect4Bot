@@ -7,6 +7,9 @@
 
 
 Python bot to play connect4, uses Q-Learning based on the Greedy Epsilon Bellman Equation.
+
+https://youtube.com/shorts/njdJeu95p6s?si=jI39STsb80ijHa8h
+
 ## Installation
 
 1. Unzip `q_table_shelf.db.zip` and place the three files in root.
